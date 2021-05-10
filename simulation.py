@@ -29,5 +29,35 @@ def welfareScore(CiT, Xi, T):
     welfare_score = 0.0
     for i in range(len(CiT)):
         welfare_score += Xi[CiT[i]]
-    return welfare_score / T  # = 1/T * sum_(n in Ci) (Xi,n)
+    return welfare_score / T  # = 1/T * sum_(n in Cit) (Xi,n)
+
+
+def initSigma(CiT, NiT, sigma_Xi):
+    """"
+    partition covariance matrix
+    """
+    sigma11 = np.zeros((len(CiT), len(CiT)))
+    sigma12 = np.zeros((len(CiT), len(NiT)))
+    sigma21 = np.zeros((len(NiT), len(CiT)))
+    sigma22 = np.zeros((len(NiT), len(NiT)))
+
+    for i in range(len(CiT)):
+        for j in range(len(CiT)):
+            sigma11[i][j] = sigma_Xi[CiT[i]][CiT[j]]
+
+        for j in range(len(NiT)):
+            sigma21[j][i] = sigma_Xi[CiT[i]][NiT[j]]
+
+
+    for i in range(len(NiT)):
+        for j in range(len(CiT)):
+            sigma12[j][i] = sigma_Xi[NiT[i]][CiT[j]]
+
+        for j in range(len(NiT)):
+            sigma22[i][j] = sigma_Xi[NiT[i]][NiT[j]]    # known part
+
+    return sigma11, sigma12, sigma21, sigma22
+
+
+
 

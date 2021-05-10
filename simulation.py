@@ -20,3 +20,14 @@ def createCovarianceMatrix(sigma, rho, N):
 
     return cov_matrix
 
+# TODO vertainty equivalent
+
+def welfareScore(CiT, Xi, T):
+    """
+    welfare: average of the realized values
+    """
+    welfare_score = 0.0
+    for i in range(len(CiT)):
+        welfare_score += Xi[CiT[i]]
+    return welfare_score / T  # = 1/T * sum_(n in Ci) (Xi,n)
+

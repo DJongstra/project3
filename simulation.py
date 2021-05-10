@@ -58,6 +58,41 @@ def initSigma(CiT, NiT, sigma_Xi):
 
     return sigma11, sigma12, sigma21, sigma22
 
+#get_mubar_sigmamu is split up into different functions
+
+def muBar(sigma_Xi, Xi, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
+    """
+    :param Xi: all items?
+    :param x1: consumed items?
+    :param sigma11: split up covariance matrix
+    :param sigma21: split up covariance matrix
+    :param mu_t: initial mean beliefs user has over items in Ct
+    :param mu_Nt: initial mean beliefs user has over items not in Ct
+    :return: muBar, used for the resulting beliefs over the remaining items after item consumption
+    """
+    #TODO delete all params that are not used?
+    Ct = np.array([Xi[n] for n in x1])  # get consumed items
+    inverse = np.linalg.inv(sigma11)
+    innerMulti = sigma21 * inverse
+    muBar = mu_Nt + innerMulti * (Ct - mu_t)   # mu_N-t + sigma(N-t,t)*sigma^-1(t,t) * (c_t - mu_t)
+
+    return muBar
+
+
+def sigmaBar(sigma_Xi, Xi, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
+    """
+    uses the (split up) covariance matrix to calculate sigmaBar, used for the resulting beliefs over the remaining items after item consumption
+    """
+    # TODO delete all params that are not used?
+    inverse = np.linalg.inv(sigma11)
+    innerMulti = sigma21 * inverse
+    sigmaBar = sigma22 - (innerMulti + sigma12)     # = sigma(N-t,N-t) - sigma(N-t,t)*sigma^-1(t,t) * sigma(t,N-t)
+
+    return sigmaBar
+
+
+
+
 
 
 

@@ -22,17 +22,17 @@ def createCovarianceMatrix(sigma, rho, N):
 
 # TODO vertainty equivalent
 
-def welfareScore(CiT, Xi, T):
+def welfareScore(CiT, Ui, T):
     """
     welfare: average of the realized values
     """
     welfare_score = 0.0
     for i in range(len(CiT)):
-        welfare_score += Xi[CiT[i]]
-    return welfare_score / T  # = 1/T * sum_(n in Cit) (Xi,n)
+        welfare_score += Ui[CiT[i]]
+    return welfare_score / T  # = 1/T * sum_(n in Cit) (Ui,n)
 
 
-def initSigma(CiT, NiT, sigma_Xi):
+def initSigma(CiT, NiT, sigma_Ui):
     """"
     partition covariance matrix
     """
@@ -43,27 +43,27 @@ def initSigma(CiT, NiT, sigma_Xi):
 
     for i in range(len(CiT)):
         for j in range(len(CiT)):
-            sigma11[i][j] = sigma_Xi[CiT[i]][CiT[j]]
+            sigma11[i][j] = sigma_Ui[CiT[i]][CiT[j]]
 
         for j in range(len(NiT)):
-            sigma21[j][i] = sigma_Xi[CiT[i]][NiT[j]]
+            sigma21[j][i] = sigma_Ui[CiT[i]][NiT[j]]
 
 
     for i in range(len(NiT)):
         for j in range(len(CiT)):
-            sigma12[j][i] = sigma_Xi[NiT[i]][CiT[j]]
+            sigma12[j][i] = sigma_Ui[NiT[i]][CiT[j]]
 
         for j in range(len(NiT)):
-            sigma22[i][j] = sigma_Xi[NiT[i]][NiT[j]]    # known part
+            sigma22[i][j] = sigma_Ui[NiT[i]][NiT[j]]    # known part
 
     return sigma11, sigma12, sigma21, sigma22
 
 #get_mubar_sigmamu is split up into different functions
 
-def muBar(sigma_Xi, Xi, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
+def muBar(sigma_Ui, Ui, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
     """
-    :param Xi: all items?
-    :param x1: consumed items?
+    :param Ui: utility
+    :param x1: consumed items? #TODO double check
     :param sigma11: split up covariance matrix
     :param sigma21: split up covariance matrix
     :param mu_t: initial mean beliefs user has over items in Ct
@@ -71,7 +71,7 @@ def muBar(sigma_Xi, Xi, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
     :return: muBar, used for the resulting beliefs over the remaining items after item consumption
     """
     #TODO delete all params that are not used?
-    Ct = np.array([Xi[n] for n in x1])  # get consumed items
+    Ct = np.array([Ui[n] for n in x1])  # get consumed items
     inverse = np.linalg.inv(sigma11)
     innerMulti = sigma21 * inverse
     muBar = mu_Nt + innerMulti * (Ct - mu_t)   # mu_N-t + sigma(N-t,t)*sigma^-1(t,t) * (c_t - mu_t)
@@ -79,7 +79,7 @@ def muBar(sigma_Xi, Xi, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
     return muBar
 
 
-def sigmaBar(sigma_Xi, Xi, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
+def sigmaBar(sigma_Ui, Ui, x1, sigma11, sigma12, sigma21, sigma22, mu_t, mu_Nt):
     """
     uses the (split up) covariance matrix to calculate sigmaBar, used for the resulting beliefs over the remaining items after item consumption
     """

@@ -227,8 +227,8 @@ def simulate(N, T, beta, nr_ind, Sigma_V_i, Sigma_V, Sigma_V_ibar, gamma, seed):
 
 
     C_pop = {"no_rec" : np.zeros((nr_ind, T),dtype=int), "omni" : np.zeros((nr_ind, T),dtype=int), "partial" : np.zeros((nr_ind, T),dtype=int)}
-    W_pop = {"no_rec" : np.zeros((nr_ind, T),dtype=int), "omni" : np.zeros((nr_ind, T),dtype=int), "partial" : np.zeros((nr_ind, T),dtype=int)}
-    R_pop = {"no_rec" : np.zeros((nr_ind, T),dtype=int), "omni" : np.zeros((nr_ind, T),dtype=int), "partial" : np.zeros((nr_ind, T),dtype=int)}
+    W_pop = {"no_rec" : np.zeros((nr_ind, T)), "omni" : np.zeros((nr_ind, T)), "partial" : np.zeros((nr_ind, T))}
+    R_pop = {"no_rec" : np.zeros((nr_ind, T)), "omni" : np.zeros((nr_ind, T)), "partial" : np.zeros((nr_ind, T))}
 
     # V = (v_n) n in I aka: common value component v_n in vector form
 

@@ -226,9 +226,13 @@ def simulate(N, T, beta, nr_ind, Sigma_V_i, Sigma_V, Sigma_V_ibar, gamma, seed):
 
 
 
-    C_pop = {"no_rec" : np.zeros((nr_ind, T),dtype=int), "omni" : np.zeros((nr_ind, T),dtype=int), "partial" : np.zeros((nr_ind, T),dtype=int)}
-    W_pop = {"no_rec" : np.zeros((nr_ind, T)), "omni" : np.zeros((nr_ind, T)), "partial" : np.zeros((nr_ind, T))}
-    R_pop = {"no_rec" : np.zeros((nr_ind, T)), "omni" : np.zeros((nr_ind, T)), "partial" : np.zeros((nr_ind, T))}
+    #C_pop = {"no_rec" : np.zeros((nr_ind, T),dtype=int), "omni" : np.zeros((nr_ind, T),dtype=int), "partial" : np.zeros((nr_ind, T),dtype=int)}
+    #W_pop = {"no_rec" : np.zeros((nr_ind, T)), "omni" : np.zeros((nr_ind, T)), "partial" : np.zeros((nr_ind, T))}
+    #R_pop = {"no_rec" : np.zeros((nr_ind, T)), "omni" : np.zeros((nr_ind, T)), "partial" : np.zeros((nr_ind, T))}
+
+    C_pop = {"partial" : np.zeros((nr_ind, T),dtype=int)}
+    W_pop = { "partial" : np.zeros((nr_ind, T))}
+    R_pop = { "partial" : np.zeros((nr_ind, T))}
 
     # V = (v_n) n in I aka: common value component v_n in vector form
 
@@ -253,19 +257,16 @@ def simulate(N, T, beta, nr_ind, Sigma_V_i, Sigma_V, Sigma_V_ibar, gamma, seed):
 
 
         ## NO RECOMMENDATION CASE
-        Sigma_U_i = Sigma_V_i + beta ** 2 * (Sigma_V)
-        C_iT_no_rec = choice_ind(np.copy(U_i), np.copy(mu_U_i), np.copy(Sigma_U_i), T, Nset, gamma)
+        #Sigma_U_i = Sigma_V_i + beta ** 2 * (Sigma_V)
+        #C_iT_no_rec = choice_ind(np.copy(U_i), np.copy(mu_U_i), np.copy(Sigma_U_i), T, Nset, gamma)
 
-        #print(C_pop["no_rec"])
-        #print(C_pop["no_rec"][it_ind, :])
-        #print(C_iT_no_rec)
-        C_pop["no_rec"][it_ind, :] = C_iT_no_rec
-        W_pop["no_rec"][it_ind, :] = U_i[C_iT_no_rec]
+        #C_pop["no_rec"][it_ind, :] = C_iT_no_rec
+        #W_pop["no_rec"][it_ind, :] = U_i[C_iT_no_rec]
 
         ## OMNISCIENT CASE
-        C_iT = choice_omni(np.copy(U_i), T, Nset)
-        C_pop["omni"][it_ind, :] = C_iT
-        W_pop["omni"][it_ind, :] = U_i[C_iT]
+        #C_iT = choice_omni(np.copy(U_i), T, Nset)
+        #C_pop["omni"][it_ind, :] = C_iT
+        #W_pop["omni"][it_ind, :] = U_i[C_iT]
 
         ## PARTIAL REC Case
         C_iT_partial, R_iT = choice_part(np.copy(V_i), np.copy(mu_V_i), np.copy(Sigma_V_i), np.copy(V), T, Nset, gamma, beta)
@@ -278,26 +279,26 @@ def simulate(N, T, beta, nr_ind, Sigma_V_i, Sigma_V, Sigma_V_ibar, gamma, seed):
 
 if __name__ == '__main__':
 
-    nr_pop = 10
+    nr_pop = 100
     #
-    nr_ind = 10
+    nr_ind = 100
     #
     sigma_ibar = .1
     #
     rho_ibar = 0.0
 
-    N_vals = [20] # [200]
+    N_vals = [200]
 
     T_vals = [20]
 
     # Covariance structure
-    rho_vals = [0.0]#[0.0, 0.1, 0.3, 0.5, 0.7, 0.9]
+    rho_vals = [0.0]#, 0.1 , 0.3, 0.5, 0.7, 0.9]
     # utility idiosyncratic degree
-    beta_vals = [0.0]#, 0.4, 0.8, 1., 2., 5.]
+    beta_vals = [0.0]#, 0.4   , 0.8, 1., 2., 5.]
     # absolute risk aversion
-    alpha_vals = [0.0]#, 0.3, 0.6, 1., 5.]
+    alpha_vals = [0]#, 0.3   , 0.6, 1., 5.]
 
-    sigma_vals = [0.25]#[0.25, 0.5, 1.0, 2.0, 4.0]
+    sigma_vals = [0.25]#, 0.5   , 1.0, 2.0, 4.0]
 
     params = list(product(N_vals, T_vals, rho_vals, beta_vals, sigma_vals, alpha_vals))
 
@@ -319,7 +320,7 @@ if __name__ == '__main__':
         Sigma_V = createCovarianceMatrix(sigma, rho, N)
 
         Sigma_V_ibar = createCovarianceMatrix(sigma_ibar,rho_ibar,N)
-        dict_key_str = f"N: {N} T {T} rho {rho} beta {beta} sigma {sigma} alpha {alpha} nr_pp {nr_pop} nr_ind {nr_ind}"
+        dict_key_str = f"({N},{T},{rho},{beta},{sigma},{alpha},{nr_pop},{nr_ind})"
         sim_results[dict_key_str] = []
         for i in range(nr_pop):
 
